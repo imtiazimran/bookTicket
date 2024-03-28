@@ -2,12 +2,8 @@
 import { Navbar } from "keep-react";
 import { CaretDown } from "phosphor-react";
 import logo from ".././assets/busLogo.png";
-type ImageProps = {
-  src: string;
-  alt: string;
-  width: string;
-  height: string;
-};
+import { Link } from "react-router-dom";
+
 
 export const NavbarComponent: React.FC = () => {
   const logoProps: ImageProps = {
@@ -23,9 +19,11 @@ export const NavbarComponent: React.FC = () => {
       className="bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-800 px-0 py-0"
     >
       <Navbar.Container className="flex items-center justify-between">
-        <Navbar.Brand>
-          <img {...logoProps} />
-        </Navbar.Brand>
+        <Link to={"/"}>
+          <Navbar.Brand>
+            <img {...logoProps} />
+          </Navbar.Brand>
+        </Link>
         <Navbar.Collapse
           collapseType="sidebar"
           className="fixed right-0 top-0 bg-white p-10 xl:!w-1/6 lg:!w-2/6 md:!w-1/2"
@@ -51,7 +49,7 @@ export const NavbarComponent: React.FC = () => {
             <Navbar.Link linkName="Resources" className="!py-0" />
           </Navbar.Container>
         </Navbar.Collapse>
-        <Navbar.Container className="flex gap-1">
+        <Navbar.Container className="flex gap-1 text-white">
           <Navbar.Toggle className="block" />
           Menu
         </Navbar.Container>

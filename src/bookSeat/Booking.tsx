@@ -1,13 +1,32 @@
 import { Button } from "keep-react";
 import { useState } from "react";
+import {
+  useSingleCoachQuery,
+  useUpdateSeatMutation,
+} from "../redux/api/apiSlice";
+import { useParams } from "react-router-dom";
+import Container from "../utils/Container";
+import { TCoach } from "../utils/types/types";
+import { useDispatch } from "react-redux";
 
 export const Booking = () => {
-  // Initialize state to manage seat statuses, selected seats, and booked seats
+  const { id } = useParams();
+  const { data, isLoading } = useSingleCoachQuery(id);
+  const { coach }: TCoach = data || {};
+  const { name, image, number, departure, price, seats, bookedSeats } =
+    coach || {};
+  const dispatch = useDispatch();
+  const [updateSeatMutation, { isLoading: mutaionLoad, data: res }] =
+    useUpdateSeatMutation();
+
+  const Loading = isLoading || mutaionLoad;
+  console.log(res);
+
   const [seatStatus, setSeatStatus] = useState<Array<string>>(
-    Array(40).fill("available")
+    Array(seats || 40).fill("available")
   );
   const [selectedSeats, setSelectedSeats] = useState<Array<string>>([]);
-  const [bookedSeats, setBookedSeats] = useState<Array<string>>([]);
+
   // Function to handle seat selection
   const handleSeatSelection = (seatName: string) => {
     const seatIndex = selectedSeats.indexOf(seatName);
@@ -31,9 +50,13 @@ export const Booking = () => {
 
   // Function to handle booking
   const handleBooking = () => {
-    // Update booked seats
-    setBookedSeats((prevBookedSeats) => [...prevBookedSeats, ...selectedSeats]);
-    // Reset selected seats
+    // Call the mutate function from the mutation hook
+    dispatch(
+      updateSeatMutation({
+        id: id,
+        bookedSeats: [...selectedSeats, ...bookedSeats],
+      })
+    );
     setSelectedSeats([]);
   };
 
@@ -43,8 +66,14 @@ export const Booking = () => {
     const col = parseInt(seatName.slice(1)) - 1; // Convert column number to index (1-based to 0-based)
     return row * 4 + col; // Assuming 4 columns per row
   };
+
+  if (Loading || !seats) {
+    return <div>Loading...</div>;
+  }
+
+  // Inside your component
   return (
-    <div className="w-[80%] mx-auto mb-10">
+    <Container>
       <Button className="w-full my-7" type="button" onClick={handleBooking}>
         Confirm
       </Button>
@@ -64,7 +93,7 @@ export const Booking = () => {
           })}
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
@@ -87,9 +116,6 @@ export const Pill = ({
   } else {
     bgColor = "bg-green-500";
   }
-
-  // console.log("Seat Name:", seatName);
-  // console.log("Booked Seats:", booked);
 
   return (
     <div>

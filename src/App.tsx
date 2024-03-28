@@ -1,12 +1,12 @@
 import "./App.css";
-import { Booking } from "./bookSeat/Booking";
 import { NavbarComponent } from "./common/Nav";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <div className="">
       <NavbarComponent />
-      <Booking />
+      <Outlet/>
     </div>
   );
 }
