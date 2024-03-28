@@ -39,6 +39,7 @@ export const NavbarComponent = () => {
               className="!py-0"
             />
             <Navbar.Link
+            href="https://blog.keep.dev/"
               linkName="Blogs"
               icon={<CaretDown size={20} />}
               className="!py-0"

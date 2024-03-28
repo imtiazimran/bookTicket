@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { Button } from "keep-react";
+import { useState } from "react";
 
 export const Booking = () => {
   // Initialize state to manage seat statuses, selected seats, and booked seats
@@ -6,17 +7,12 @@ export const Booking = () => {
     Array(40).fill("available")
   );
   const [selectedSeats, setSelectedSeats] = useState<Array<string>>([]);
-  const [bookedSeats, setBookedSeats] = useState<Array<string>>([
-    "A1",
-    "B3",
-    "C2",
-    "A4",
-  ]);
+  const [bookedSeats, setBookedSeats] = useState<Array<string>>([]);
   // Function to handle seat selection
   const handleSeatSelection = (seatName: string) => {
     const seatIndex = selectedSeats.indexOf(seatName);
-    let newSelectedSeats = [...selectedSeats];
-    let newSeatStatus = [...seatStatus];
+    const newSelectedSeats = [...selectedSeats];
+    const newSeatStatus = [...seatStatus];
 
     if (seatIndex === -1) {
       // Seat is not selected, so add it to selectedSeats array
@@ -49,6 +45,9 @@ export const Booking = () => {
   };
   return (
     <div className="w-[80%] mx-auto mb-10">
+      <Button className="w-full my-7" type="button" onClick={handleBooking}>
+        Confirm
+      </Button>
       <div className="flex justify-center">
         <div className="grid grid-cols-4 gap-4">
           {seatStatus.map((status, index) => {
@@ -65,7 +64,6 @@ export const Booking = () => {
           })}
         </div>
       </div>
-      <button onClick={handleBooking}>Book Selected Seats</button>
     </div>
   );
 };
@@ -81,17 +79,13 @@ export const Pill = ({
   booked: string[];
   onClick: () => void;
 }) => {
-  console.log(`Rendering seat ${seatName}`);
   let bgColor = "";
   if (booked.includes(seatName)) {
     bgColor = "bg-red-500";
-    console.log(`Seat ${seatName} is booked`);
   } else if (status === "selected") {
     bgColor = "bg-yellow-500";
-    console.log(`Seat ${seatName} is selected`);
   } else {
     bgColor = "bg-green-500";
-    console.log(`Seat ${seatName} is available`);
   }
 
   // console.log("Seat Name:", seatName);
