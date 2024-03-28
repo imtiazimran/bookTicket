@@ -9,19 +9,22 @@ type ImageProps = {
   height: string;
 };
 
-export const NavbarComponent = () => {
+export const NavbarComponent: React.FC = () => {
   const logoProps: ImageProps = {
     src: logo,
     alt: "keep",
-    width: "100",
-    height: "40",
+    width: "50",
+    height: "10",
   };
 
   return (
-    <Navbar fluid={true} className="!py-5">
+    <Navbar
+      fluid={true}
+      className="bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-800 px-0 py-0"
+    >
       <Navbar.Container className="flex items-center justify-between">
         <Navbar.Brand>
-         <img {...logoProps} />
+          <img {...logoProps} />
         </Navbar.Brand>
         <Navbar.Collapse
           collapseType="sidebar"
@@ -39,7 +42,7 @@ export const NavbarComponent = () => {
               className="!py-0"
             />
             <Navbar.Link
-            href="https://blog.keep.dev/"
+              href="https://blog.keep.dev/"
               linkName="Blogs"
               icon={<CaretDown size={20} />}
               className="!py-0"
