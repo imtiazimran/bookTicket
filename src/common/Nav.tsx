@@ -1,11 +1,12 @@
 "use client";
-import { Navbar } from "keep-react";
+import {  Navbar } from "keep-react";
 import { CaretDown } from "phosphor-react";
 import logo from ".././assets/busLogo.png";
 import { Link } from "react-router-dom";
+import { ImageProps } from "../utils/types/types";
 
-
-export const NavbarComponent: React.FC = () => {
+const NavbarComponent: React.FC = () => {
+ 
   const logoProps: ImageProps = {
     src: logo,
     alt: "keep",
@@ -57,3 +58,5 @@ export const NavbarComponent: React.FC = () => {
     </Navbar>
   );
 };
+
+export default NavbarComponent;

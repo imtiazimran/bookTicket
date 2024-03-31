@@ -2,12 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import { Link, RouterProvider, createBrowserRouter } from "react-router-dom";
+import {  RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Booking } from "./bookSeat/Booking.tsx";
-import { Button } from "keep-react";
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
 import AllCoach from "./bookSeat/AllCoach.tsx";
+import Layout from "./bookSeat/layout/Layout.tsx";
+import { AddCoach } from "./bookSeat/AddCoach.tsx";
 
 const router = createBrowserRouter([
   {
@@ -16,13 +17,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: (
-          <Button className="w-28 mx-auto mt-10">
-            <Link to="/booking" className="text-white text-center">
-              Booking
-            </Link>
-          </Button>
-        ),
+        element: <Layout/>,
       },
       {
         path: "/booking",
@@ -30,7 +25,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/booking/:id",
-        element:<Booking /> 
+        element:<Booking /> ,
+      },
+      {
+        path: "/addCoach",
+        element: <AddCoach />,
       }
     ],
   },

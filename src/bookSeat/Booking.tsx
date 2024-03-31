@@ -7,24 +7,27 @@ import {
 import { useParams } from "react-router-dom";
 import Container from "../utils/Container";
 import { TCoach } from "../utils/types/types";
-import { useDispatch } from "react-redux";
 
 export const Booking = () => {
   const { id } = useParams();
-  const { data, isLoading } = useSingleCoachQuery(id);
-  const { coach }: TCoach = data || {};
-  const { name, image, number, departure, price, seats, bookedSeats } =
-    coach || {};
-  const dispatch = useDispatch();
-  const [updateSeatMutation, { isLoading: mutaionLoad, data: res }] =
+  const { data, isLoading } : { data: TCoach, isLoading: boolean } = useSingleCoachQuery(id);
+  // const { coach } = data 
+  const { seats, bookedSeats } =
+    data.coach
+  const [updateSeatMutation, { isLoading: mutaionLoad }] =
     useUpdateSeatMutation();
 
   const Loading = isLoading || mutaionLoad;
-  console.log(res);
 
-  const [seatStatus, setSeatStatus] = useState<Array<string>>(
-    Array(seats || 40).fill("available")
-  );
+const initializeSeatStatus = (totalSeats: number): string[] => {
+  return Array.from({ length: totalSeats }, () => "available");
+};
+
+const [seatStatus, setSeatStatus] = useState<string[]>(
+  initializeSeatStatus(seats * 4) // Adjust if needed based on the layout
+);
+
+
   const [selectedSeats, setSelectedSeats] = useState<Array<string>>([]);
 
   // Function to handle seat selection
@@ -47,18 +50,32 @@ export const Booking = () => {
     setSelectedSeats(newSelectedSeats);
     setSeatStatus(newSeatStatus);
   };
+  // Function to handle booking
+  // Function to handle booking
+  const handleBooking = async () => {
+    try {
+      // Call the mutate function from the mutation hook
+      const response = await updateSeatMutation({
+        id,
+        bookedSeats: [...selectedSeats, ...bookedSeats],
+      });
+
+      // Check if the mutation was successful
+      if (response.error) {
+        // Handle error
+        console.error("Error updating seats:", response.error);
+      } else {
+        // Mutation successful
+        console.log("Seats updated successfully:", response.data);
+        setSelectedSeats([]); // Clear selected seats
+      }
+    } catch (error) {
+      // Handle any other errors
+      console.error("An error occurred while updating seats:", error);
+    }
+  };
 
   // Function to handle booking
-  const handleBooking = () => {
-    // Call the mutate function from the mutation hook
-    dispatch(
-      updateSeatMutation({
-        id: id,
-        bookedSeats: [...selectedSeats, ...bookedSeats],
-      })
-    );
-    setSelectedSeats([]);
-  };
 
   // Function to get the index of a seat based on its name (e.g., "A1", "B2")
   const getSeatIndex = (seatName: string): number => {
@@ -74,26 +91,33 @@ export const Booking = () => {
   // Inside your component
   return (
     <Container>
-      <Button className="w-full my-7" type="button" onClick={handleBooking}>
-        Confirm
-      </Button>
-      <div className="flex justify-center">
-        <div className="grid grid-cols-4 gap-4">
-          {seatStatus.map((status, index) => {
-            const seatName = getSeatName(index);
-            return (
-              <Pill
-                status={status}
-                seatName={seatName}
-                booked={bookedSeats}
-                key={index + 5}
-                onClick={() => handleSeatSelection(seatName)}
-              />
-            );
-          })}
-        </div>
+    <Button className="w-full my-7" type="button" onClick={handleBooking}>
+      Confirm
+    </Button>
+    <div className="flex justify-center">
+      <div className="grid grid-cols-4 gap-4">
+        {Array.from({ length: seats }, (_, index) => {
+          const seatName = getSeatName(index);
+          const status = seatStatus[index];
+          return (
+            <div
+              key={index}
+              className={`w-10 h-10 rounded p-4 ${
+                bookedSeats.includes(seatName)
+                  ? "bg-red-500"
+                  : status === "selected"
+                  ? "bg-yellow-500"
+                  : "bg-green-500"
+              } text-center`}
+              onClick={() => handleSeatSelection(seatName)}
+            >
+              {seatName}
+            </div>
+          );
+        })}
       </div>
-    </Container>
+    </div>
+  </Container>
   );
 };
 
