@@ -7,13 +7,16 @@ import {
 import { useParams } from "react-router-dom";
 import Container from "../utils/Container";
 import { TCoach } from "../utils/types/types";
+import Swal from "sweetalert2";
 
 export const Booking = () => {
   const { id } = useParams();
-  const { data, isLoading } : { data: TCoach, isLoading: boolean } = useSingleCoachQuery(id);
+  const { data, isLoading } = useSingleCoachQuery(id as string) as { data: TCoach; isLoading: boolean };
+
   // const { coach } = data 
-  const { seats, bookedSeats } =
-    data.coach
+  const { seats, bookedSeats } = data.coach as TCoach;
+
+
   const [updateSeatMutation, { isLoading: mutaionLoad }] =
     useUpdateSeatMutation();
 
@@ -59,22 +62,37 @@ const [seatStatus, setSeatStatus] = useState<string[]>(
         id,
         bookedSeats: [...selectedSeats, ...bookedSeats],
       });
-
+  
       // Check if the mutation was successful
-      if (response.error) {
+      if ('error' in response) {
         // Handle error
         console.error("Error updating seats:", response.error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while updating seats',
+        });
       } else {
         // Mutation successful
         console.log("Seats updated successfully:", response.data);
         setSelectedSeats([]); // Clear selected seats
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Seats updated successfully',
+        });
       }
     } catch (error) {
       // Handle any other errors
       console.error("An error occurred while updating seats:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while updating seats',
+      });
     }
   };
-
+  
   // Function to handle booking
 
   // Function to get the index of a seat based on its name (e.g., "A1", "B2")

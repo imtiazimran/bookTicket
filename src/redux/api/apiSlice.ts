@@ -10,7 +10,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl }),
   tagTypes: ["Tickets"], // Define a tag for queries dependent on coach data
   endpoints: (builder) => ({
-    fetchData: builder.query<TCoach[], void>({
+    fetchData: builder.query<TCoach, void>({
       query: () => "/",
       providesTags: ["Tickets"], 
     }),

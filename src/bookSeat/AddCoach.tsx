@@ -2,24 +2,47 @@ import { useForm } from "react-hook-form";
 import { Button, Input, Label } from "keep-react";
 import { TCoach } from "../utils/types/types";
 import { usePostDataMutation } from "../redux/api/apiSlice";
-import TimePicker from "react-time-picker";
+import { useState } from "react";
+import DatePicker from "react-datepicker";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export const AddCoach = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        watch, // Add watch function
-        setValue // Add setValue function
-      } = useForm();
-
-  const [postData, { isLoading }] = usePostDataMutation()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const navigation = useNavigate();
+  const [postData, { isLoading }] = usePostDataMutation();
+  const [departure, setDeparture] = useState(new Date());
 
   const onSubmit = async (data: Partial<TCoach>) => {
     console.log(data);
-    const response = await postData({...data, "departure": new Date()});
-    console.log(response, isLoading);
-    // Call your API or perform any other action with the form data
+    const response = await postData({ ...data, departure: departure });
+
+    if ("error" in response) {
+      // Handle error case
+      console.error("An error occurred:", response.error);
+      // Show error message using SweetAlert2
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "An error occurred while submitting the form. Please try again later.",
+      });
+    } else {
+      // Handle success case
+      console.log("Data successfully submitted:", response.data);
+      // Show success message using SweetAlert2
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Your data has been successfully submitted.",
+      }).then(() => {
+        // Redirect to '/'
+        navigation(`/booking/${response.data._id}`);
+      });
+    }
   };
 
   return (
@@ -62,15 +85,16 @@ export const AddCoach = () => {
         )}
       </fieldset>
       <fieldset className="max-w-md space-y-1">
-        <Label htmlFor="departure">Departure Time</Label>
-        <TimePicker
-          id="departure"
-          name="departure"
-          value={watch('departure') || ''}
-          onChange={(value) => setValue('departure', value)}
-          format="HH:mm"
-          required
-        />
+        <div className="CouponInputGroup1">
+          <label>Start Date</label>
+          <DatePicker
+            selected={departure}
+            showTimeSelect
+            dateFormat="Pp"
+            onChange={(date: Date) => setDeparture(date)}
+            required
+          />
+        </div>
         {errors.departure && (
           <span className="text-red-500">Departure time is required</span>
         )}
@@ -100,7 +124,7 @@ export const AddCoach = () => {
         )}
       </fieldset>
       <Button type="submit" size="sm" color="primary">
-        Submit
+        {isLoading ? "Submitting..." : "Submit"}
       </Button>
     </form>
   );

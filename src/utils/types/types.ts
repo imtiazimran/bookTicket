@@ -5,7 +5,7 @@ export type TCoach = {
     image: string
     number: string
     bookedSeats: string[]
-    departure: string
+    departure: Date
     price: number
     seats: number
     error: unknown
