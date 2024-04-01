@@ -1,7 +1,7 @@
 import { Button } from "keep-react";
 import { useState } from "react";
 import {
-  useSingleCoachQuery,
+  useFetchSingleDataQuery,
   useUpdateSeatMutation,
 } from "../redux/api/apiSlice";
 import { useParams } from "react-router-dom";
@@ -9,16 +9,24 @@ import Container from "../utils/Container";
 import { TCoach } from "../utils/types/types";
 import Swal from "sweetalert2";
 
-export const Booking = () => {
-  const { id } = useParams();
-  const { data, isLoading } = useSingleCoachQuery(id as string) as { data: TCoach; isLoading: boolean };
+interface Params extends Record<string, string | undefined> {
+  id: string;
+}
 
+
+export const Booking = () => {
+  const { id } = useParams<Params>();
+  
+  const { data, isLoading } = useFetchSingleDataQuery('6605c82c9dbf73d1ab0f0b3d' ) as { data: TCoach; isLoading: boolean };
+
+  console.log(data, id);
   // const { coach } = data 
   const { seats, bookedSeats } = data.coach as TCoach;
 
 
   const [updateSeatMutation, { isLoading: mutaionLoad }] =
     useUpdateSeatMutation();
+    
 
   const Loading = isLoading || mutaionLoad;
 
@@ -102,7 +110,7 @@ const [seatStatus, setSeatStatus] = useState<string[]>(
     return row * 4 + col; // Assuming 4 columns per row
   };
 
-  if (Loading || !seats) {
+  if (Loading || !seats || !id) {
     return <div>Loading...</div>;
   }
 
