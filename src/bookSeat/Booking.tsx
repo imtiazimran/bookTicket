@@ -1,10 +1,10 @@
 import { Button } from "keep-react";
-import { useState } from "react";
+import {  useState } from "react";
 import {
-  useFetchSingleDataQuery,
+  // useGetCaochQuery,
   useUpdateSeatMutation,
 } from "../redux/api/apiSlice";
-import { useParams } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import Container from "../utils/Container";
 import { TCoach } from "../utils/types/types";
 import Swal from "sweetalert2";
@@ -13,31 +13,24 @@ interface Params extends Record<string, string | undefined> {
   id: string;
 }
 
-
 export const Booking = () => {
   const { id } = useParams<Params>();
-  
-  const { data, isLoading } = useFetchSingleDataQuery('6605c82c9dbf73d1ab0f0b3d' ) as { data: TCoach; isLoading: boolean };
-
-  console.log(data, id);
-  // const { coach } = data 
-  const { seats, bookedSeats } = data.coach as TCoach;
-
+  const data  = useLoaderData() as TCoach
+  // const { coach } = data
+  const { seats, bookedSeats } = data?.coach as TCoach;
 
   const [updateSeatMutation, { isLoading: mutaionLoad }] =
     useUpdateSeatMutation();
-    
 
-  const Loading = isLoading || mutaionLoad;
+  const Loading = mutaionLoad;
 
-const initializeSeatStatus = (totalSeats: number): string[] => {
-  return Array.from({ length: totalSeats }, () => "available");
-};
+  const initializeSeatStatus = (totalSeats: number): string[] => {
+    return Array.from({ length: totalSeats }, () => "available");
+  };
 
-const [seatStatus, setSeatStatus] = useState<string[]>(
-  initializeSeatStatus(seats * 4) // Adjust if needed based on the layout
-);
-
+  const [seatStatus, setSeatStatus] = useState<string[]>(
+    initializeSeatStatus(seats * 4) // Adjust if needed based on the layout
+  );
 
   const [selectedSeats, setSelectedSeats] = useState<Array<string>>([]);
 
@@ -70,37 +63,37 @@ const [seatStatus, setSeatStatus] = useState<string[]>(
         id,
         bookedSeats: [...selectedSeats, ...bookedSeats],
       });
-  
+
       // Check if the mutation was successful
-      if ('error' in response) {
+      if ("error" in response) {
         // Handle error
         console.error("Error updating seats:", response.error);
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'An error occurred while updating seats',
+          icon: "error",
+          title: "Error",
+          text: "An error occurred while updating seats",
         });
       } else {
         // Mutation successful
-        console.log("Seats updated successfully:", response.data);
         setSelectedSeats([]); // Clear selected seats
         Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Seats updated successfully',
+          icon: "success",
+          title: "Success",
+          text: "Seats updated successfully",
         });
+        window.location.reload();
       }
     } catch (error) {
       // Handle any other errors
       console.error("An error occurred while updating seats:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while updating seats',
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while updating seats",
       });
     }
   };
-  
+
   // Function to handle booking
 
   // Function to get the index of a seat based on its name (e.g., "A1", "B2")
@@ -117,33 +110,33 @@ const [seatStatus, setSeatStatus] = useState<string[]>(
   // Inside your component
   return (
     <Container>
-    <Button className="w-full my-7" type="button" onClick={handleBooking}>
-      Confirm
-    </Button>
-    <div className="flex justify-center">
-      <div className="grid grid-cols-4 gap-4">
-        {Array.from({ length: seats }, (_, index) => {
-          const seatName = getSeatName(index);
-          const status = seatStatus[index];
-          return (
-            <div
-              key={index}
-              className={`w-10 h-10 rounded p-4 ${
-                bookedSeats.includes(seatName)
-                  ? "bg-red-500"
-                  : status === "selected"
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
-              } text-center`}
-              onClick={() => handleSeatSelection(seatName)}
-            >
-              {seatName}
-            </div>
-          );
-        })}
+      <Button className="w-full my-7" type="button" onClick={handleBooking}>
+        Confirm
+      </Button>
+      <div className="flex justify-center">
+        <div className="grid grid-cols-4 gap-4">
+          {Array.from({ length: seats }, (_, index) => {
+            const seatName = getSeatName(index);
+            const status = seatStatus[index];
+            return (
+              <div
+                key={index}
+                className={`w-10 h-10 rounded p-4 ${
+                  bookedSeats.includes(seatName)
+                    ? "bg-red-500"
+                    : status === "selected"
+                    ? "bg-yellow-500"
+                    : "bg-green-500"
+                } text-center`}
+                onClick={() => handleSeatSelection(seatName)}
+              >
+                {seatName}
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  </Container>
+    </Container>
   );
 };
 

@@ -5,6 +5,7 @@ import { useFetchDataQuery } from "../redux/api/apiSlice";
 import { TCoach } from "../utils/types/types";
 import Container from "../utils/Container";
 import Loading from "../utils/Loading";
+import { Link } from "react-router-dom";
 
 const AllCoach = () => {
   const { data, isLoading } = useFetchDataQuery() as unknown as {
@@ -64,12 +65,13 @@ const AllCoach = () => {
                     </p>
                     <p className="text-sm">Price: {coach.price}</p>
                     <p className="text-sm">Seats: {coach.seats}</p>
+                    <p className="text-sm">Booked {coach.bookedSeats.length} Seats</p>
                     <p className="text-sm">
                       Time Remaining: {timeRemaining[index]}
                     </p>
                   </Card.Description>
                   <Button size="sm" color="primary">
-                    <a href={`/booking/${coach._id}`}>Book Now</a>
+                    <Link to={`/booking/${coach._id}`}>Book Now</Link>
                   </Button>
                 </Card.Content>
               </Card>

@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { TCoach } from "../../utils/types/types";
 
-const baseUrl = "http://localhost:3000/api/v1/coach";
-// const baseUrl = "https://book-ticket-backend.vercel.app/api/v1/coach";
+// const baseUrl = "http://localhost:3000/api/v1/coach"
+export const baseUrl = "https://book-ticket-backend.vercel.app/api/v1/coach";
 
 
 export const apiSlice = createApi({
@@ -14,12 +14,11 @@ export const apiSlice = createApi({
       query: () => "/",
       providesTags: ["Tickets"], 
     }),
-    fetchSingleData: builder.query<TCoach, string>({
-      query: (id) => {
-        console.log("ID in fetchSingleData query:", id);
-        return `/${id}`;
-      },
-      providesTags: ["Tickets"], 
+    getCaoch : builder.query({
+      query: (id) => ({
+        url: `/${id}`,
+        method: "GET"
+      }),
     }),
     
     postData: builder.mutation<TCoach, Partial<TCoach>>({
@@ -43,7 +42,7 @@ export const apiSlice = createApi({
 
 export const {
   useFetchDataQuery,
-  useFetchSingleDataQuery,
+  useGetCaochQuery,
   usePostDataMutation,
   useUpdateSeatMutation,
 } = apiSlice;
