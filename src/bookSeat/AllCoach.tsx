@@ -52,36 +52,42 @@ const AllCoach = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {data &&
             "coaches" in data &&
-            coaches.map((coach: TCoach, index: number) => (
-              <Card key={coach._id}>
-                <Card.Header className="!p-0">
-                  <img src={coach.image} alt="image" className="w-full" />
-                </Card.Header>
-                <Card.Content className="space-y-3">
-                  <Card.Title>{coach.name}</Card.Title>
-                  <Card.Description>
-                    <p className="text-sm">Number: {coach.number}</p>
-                    <p className="text-sm">
-                      Departure:{" "}
-                      {moment(coach.departure).format(
-                        "MMMM Do YYYY, h:mm:ss a"
-                      )}
-                    </p>
-                    <p className="text-sm">Price: {coach.price}</p>
-                    <p className="text-sm">Seats: {coach.seats}</p>
-                    <p className="text-sm">
-                      Booked {coach.bookedSeats.length} Seats
-                    </p>
-                    <p className="text-sm">
-                      Time Remaining: {timeRemaining[index]}
-                    </p>
-                  </Card.Description>
-                  <Button size="sm" color="primary">
-                    <Link to={`/booking/${coach._id}`}>Book Now</Link>
-                  </Button>
-                </Card.Content>
-              </Card>
-            ))}
+            coaches.map((coach: TCoach, index: number) => {
+              const isExpired = moment(coach.departure).isBefore(moment());
+              return (
+                <Card
+                  key={coach._id}
+                  className={isExpired ? "hidden" : ""}
+                >
+                  <Card.Header className="!p-0">
+                    <img src={coach.image} alt="image" className="w-full" />
+                  </Card.Header>
+                  <Card.Content className="space-y-3">
+                    <Card.Title>{coach.name}</Card.Title>
+                    <Card.Description>
+                      <p className="text-sm">Number: {coach.number}</p>
+                      <p className="text-sm">
+                        Departure:{" "}
+                        {moment(coach.departure).format(
+                          "MMMM Do YYYY, h:mm:ss a"
+                        )}
+                      </p>
+                      <p className="text-sm">Price: {coach.price}</p>
+                      <p className="text-sm">Seats: {coach.seats}</p>
+                      <p className="text-sm">
+                        Booked {coach.bookedSeats.length} Seats
+                      </p>
+                      <p className="text-sm">
+                        Time Remaining: {timeRemaining[index]}
+                      </p>
+                    </Card.Description>
+                    <Button size="sm" color="primary">
+                      <Link to={`/booking/${coach._id}`}>Book Now</Link>
+                    </Button>
+                  </Card.Content>
+                </Card>
+              );
+            })}
         </div>
       )}
     </Container>
