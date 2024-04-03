@@ -9,15 +9,19 @@ import { Link } from "react-router-dom";
 
 const AllCoach = () => {
   const { data, isLoading } = useFetchDataQuery() as unknown as {
-    data: { success: boolean; message: string; coach: TCoach[] };
+    data: { success: boolean; message: string; coaches: TCoach[] };
     isLoading: boolean;
   };
+
+  const coaches = data?.coaches;
+
+  console.log(coaches);
 
   const [timeRemaining, setTimeRemaining] = useState<string[]>([]);
 
   useEffect(() => {
-    if (data && data.coach) {
-      const coachDepartures = data.coach.map((coach: { departure: Date }) =>
+    if (data && coaches) {
+      const coachDepartures = coaches.map((coach: { departure: Date }) =>
         moment(coach.departure)
       );
       const currentTime: moment.Moment = moment();
@@ -33,7 +37,7 @@ const AllCoach = () => {
 
       setTimeRemaining(remainingTimes);
     }
-  }, [data]);
+  }, [data, coaches]);
 
   if (!data) {
     return <div>Loading...</div>;
@@ -47,8 +51,8 @@ const AllCoach = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {data &&
-            "coach" in data &&
-            data.coach.map((coach: TCoach, index: number) => (
+            "coaches" in data &&
+            coaches.map((coach: TCoach, index: number) => (
               <Card key={coach._id}>
                 <Card.Header className="!p-0">
                   <img src={coach.image} alt="image" className="w-full" />
@@ -65,7 +69,9 @@ const AllCoach = () => {
                     </p>
                     <p className="text-sm">Price: {coach.price}</p>
                     <p className="text-sm">Seats: {coach.seats}</p>
-                    <p className="text-sm">Booked {coach.bookedSeats.length} Seats</p>
+                    <p className="text-sm">
+                      Booked {coach.bookedSeats.length} Seats
+                    </p>
                     <p className="text-sm">
                       Time Remaining: {timeRemaining[index]}
                     </p>
