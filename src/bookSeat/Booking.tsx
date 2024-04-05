@@ -114,7 +114,7 @@ export const Booking = () => {
         Confirm
       </Button>
       <div className="flex justify-center">
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4 pb-5">
           {Array.from({ length: seats }, (_, index) => {
             const seatName = getSeatName(index);
             const status = seatStatus[index];
@@ -140,37 +140,37 @@ export const Booking = () => {
   );
 };
 
-export const Pill = ({
-  status,
-  seatName,
-  booked,
-  onClick,
-}: {
-  status: string;
-  seatName: string;
-  booked: string[];
-  onClick: () => void;
-}) => {
-  let bgColor = "";
-  if (booked.includes(seatName)) {
-    bgColor = "bg-red-500";
-  } else if (status === "selected") {
-    bgColor = "bg-yellow-500";
-  } else {
-    bgColor = "bg-green-500";
-  }
+// export const Pill = ({
+//   status,
+//   seatName,
+//   booked,
+//   onClick,
+// }: {
+//   status: string;
+//   seatName: string;
+//   booked: string[];
+//   onClick: () => void;
+// }) => {
+//   let bgColor = "";
+//   if (booked.includes(seatName)) {
+//     bgColor = "bg-red-500";
+//   } else if (status === "selected") {
+//     bgColor = "bg-yellow-500";
+//   } else {
+//     bgColor = "bg-green-500";
+//   }
 
-  return (
-    <div>
-      <div
-        className={`w-10 h-10 rounded p-4 ${bgColor} text-center`}
-        onClick={onClick}
-      >
-        {seatName}
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <div
+//         className={`w-10 h-10 rounded p-4 ${bgColor} text-center`}
+//         onClick={onClick}
+//       >
+//         {seatName}
+//       </div>
+//     </div>
+//   );
+// };
 
 // Function to get the name of a seat based on its index
 const getSeatName = (index: number): string => {

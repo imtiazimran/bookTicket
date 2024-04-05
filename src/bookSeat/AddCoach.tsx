@@ -6,6 +6,11 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const imgKey = import.meta.env.VITE_IMGBB_KEY;
+
+
 
 export const AddCoach = () => {
   const {
@@ -16,10 +21,24 @@ export const AddCoach = () => {
   const navigation = useNavigate();
   const [postData, { isLoading }] = usePostDataMutation();
   const [departure, setDeparture] = useState(new Date());
+  const [imgLink, setImgLink] = useState("");
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+      try {
+        const response = await axios.post(`https://api.imgbb.com/1/upload?key=${imgKey}`, formData);
+        setImgLink(response.data.data.url);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+  };
 
   const onSubmit = async (data: Partial<TCoach>) => {
-    console.log(data);
-    const response = await postData({ ...data, departure: departure });
+    const response = await postData({ ...data, departure: departure, image: imgLink });
+    console.log(response);
 
     if ("error" in response) {
       // Handle error case
@@ -40,7 +59,7 @@ export const AddCoach = () => {
         text: "Your data has been successfully submitted.",
       }).then(() => {
         // Redirect to '/'
-        navigation(`/booking/${response.data._id}`);
+        navigation('/');
       });
     }
   };
@@ -61,16 +80,8 @@ export const AddCoach = () => {
         {errors.name && <span className="text-red-500">Name is required</span>}
       </fieldset>
       <fieldset className="max-w-md space-y-1">
-        <Label htmlFor="image">Image Link</Label>
-        <Input
-          {...register("image", { required: true })}
-          id="image"
-          placeholder="Enter image Link"
-          type="text"
-        />
-        {errors.image && (
-          <span className="text-red-500">Image link is required</span>
-        )}
+        <Label htmlFor="image">Image</Label>
+        <input className="px-2" onChange={handleFileUpload} type="file" name="image" id="image" />
       </fieldset>
       <fieldset className="max-w-md space-y-1">
         <Label htmlFor="number">Coach Number</Label>
