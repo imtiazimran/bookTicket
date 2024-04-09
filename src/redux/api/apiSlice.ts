@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { TCoach } from "../../utils/types/types";
 
-export const baseUrl = "http://localhost:3000/api/v1/coach"
-// export const baseUrl = "https://book-ticket-backend.vercel.app/api/v1/coach";
+// export const baseUrl = "http://localhost:3000/api/v1/coach"
+export const baseUrl = "https://book-ticket-backend.vercel.app/api/v1/coach";
 
 
 export const apiSlice = createApi({
@@ -12,15 +12,16 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     fetchData: builder.query<TCoach, void>({
       query: () => "/",
-      providesTags: ["Tickets"], 
+      providesTags: ["Tickets"],
     }),
-    getCaoch : builder.query({
+    getCaoch: builder.query({
       query: (id) => ({
         url: `/${id}`,
-        method: "GET"
+        method: "GET",
       }),
+      providesTags: ["Tickets"],
     }),
-    
+
     postData: builder.mutation<TCoach, Partial<TCoach>>({
       query: (data) => ({
         url: "/",
@@ -31,12 +32,20 @@ export const apiSlice = createApi({
     }),
     updateSeat: builder.mutation<TCoach, Partial<TCoach>>({
       query: (data) => ({
-        url: `/${data.id}`,
+
+        url: `/book/${data.id}`,
         method: "PATCH",
         body: data,
       }),
       invalidatesTags: ["Tickets"], // Invalidate "Tickets" tag upon mutation
     }),
+    deleteCoach: builder.mutation({
+      query: (id) => ({
+        url: `/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Tickets"],
+    })
   }),
 });
 
@@ -45,4 +54,5 @@ export const {
   useGetCaochQuery,
   usePostDataMutation,
   useUpdateSeatMutation,
+  useDeleteCoachMutation
 } = apiSlice;
