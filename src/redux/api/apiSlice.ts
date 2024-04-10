@@ -2,8 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { TCoach } from "../../utils/types/types";
 
 // export const baseUrl = "http://localhost:3000/api/v1/coach"
-export const baseUrl = "https://bookticketbackend.onrender.com/api/v1/coach"
-// export const baseUrl = "https://book-ticket-backend.vercel.app/api/v1/coach";
+// export const baseUrl = "https://bookticketbackend.onrender.com/api/v1/coach"
+export const baseUrl = "https://book-ticket-backend.vercel.app/api/v1/coach";
 
 
 export const apiSlice = createApi({

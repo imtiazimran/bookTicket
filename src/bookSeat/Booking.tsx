@@ -175,17 +175,21 @@ export const Booking = () => {
                 <div
                   key={index}
                   className={`w-10 h-10 rounded p-4 ${
-                    selectedForUnBook.includes(seatName) ? "bg-purple-400" : ""
-                  } ${
-                    coachData && coachData.bookedSeats.includes(seatName)
+                    selectedForUnBook.includes(seatName)
+                      ? "bg-purple-400"
+                      : coachData && coachData.bookedSeats.includes(seatName)
                       ? "bg-red-500"
                       : status === "selected"
                       ? "bg-yellow-500"
                       : "bg-green-500"
-                  } text-center`}
+                  }
+                  text-center`}
                   onClick={() => handleSeatSelection(seatName)}
-                  onDoubleClick={() =>
-                    setSelectedForUnBook((prev) => [...prev, seatName])
+                  onDoubleClick={
+                    coachData && coachData.bookedSeats.includes(seatName)
+                      ? () =>
+                          setSelectedForUnBook((prev) => [...prev, seatName])
+                      : () => {}
                   }
                 >
                   {seatName}
