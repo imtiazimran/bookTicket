@@ -33,12 +33,19 @@ export const apiSlice = createApi({
     }),
     updateSeat: builder.mutation<TCoach, Partial<TCoach>>({
       query: (data) => ({
-
         url: `/book/${data.id}`,
         method: "PATCH",
         body: data,
       }),
       invalidatesTags: ["Tickets"], // Invalidate "Tickets" tag upon mutation
+    }),
+    unSelectSeat: builder.mutation({
+      query: (data) => ({
+        url: `/unBook/${data.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Tickets"],
     }),
     deleteCoach: builder.mutation({
       query: (id) => ({
@@ -55,5 +62,6 @@ export const {
   useGetCaochQuery,
   usePostDataMutation,
   useUpdateSeatMutation,
-  useDeleteCoachMutation
+  useDeleteCoachMutation,
+  useUnSelectSeatMutation
 } = apiSlice;
