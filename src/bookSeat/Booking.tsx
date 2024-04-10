@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import Container from "../utils/Container";
 import { TCoach } from "../utils/types/types";
 import Swal from "sweetalert2";
+import Loading from "../utils/Loading";
 
 interface Params extends Record<string, string | undefined> {
   id: string;
@@ -14,7 +15,7 @@ export const Booking = () => {
   const { id } = useParams<Params>();
   const [loading, setLoading] = useState(true);
   const [coachData, setCoachData] = useState<TCoach | null>(null);
-  const { data, isLoading } = useGetCaochQuery(id);
+  const { data, isLoading, refetch } = useGetCaochQuery(id);
 
   useEffect(() => {
     if (data) {
@@ -70,6 +71,7 @@ export const Booking = () => {
           title: "Success",
           text: "Seats updated successfully",
         });
+        // refetch()
       }
     } catch (error) {
       console.error("An error occurred while updating seats:", error);
@@ -87,8 +89,25 @@ export const Booking = () => {
     return row * 4 + col;
   };
 
+  useEffect(() => {
+    const ws = new WebSocket('ws://bookticketbackend.onrender.com:3000');
+    ws.onmessage = (event) => {
+      // Handle WebSocket message
+      const message = event.data;
+      console.log('Received message from WebSocket:', message);
+     if(message === "success"){
+      refetch()
+     }
+      // refetch();
+    };
+    return () => {
+      // Cleanup WebSocket connection
+      ws.close();
+    };
+  }, [refetch]);
+
   if (loading || mutationLoading || isLoading) {
-    return <div>Loading...</div>;
+    return <Loading/>
   }
 
   return (
