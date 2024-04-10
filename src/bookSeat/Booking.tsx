@@ -90,7 +90,7 @@ export const Booking = () => {
   };
 
   useEffect(() => {
-    const ws = new WebSocket('ws://bookticketbackend.onrender.com:3000');
+    const ws = new WebSocket('wss://bookticketbackend.onrender.com:3000');
     ws.onmessage = (event) => {
       // Handle WebSocket message
       const message = event.data;
