@@ -20,7 +20,7 @@ export const Booking = () => {
   const [loading, setLoading] = useState(true);
   const [coachData, setCoachData] = useState<TCoach | null>(null);
   const { data, isLoading, refetch } = useGetCaochQuery(id);
-  const [selectedForUnBook, setSelectedForUnBook] = useState<string[]>([])
+  const [selectedForUnBook, setSelectedForUnBook] = useState<string[]>([]);
   console.log("selectedForUnBook", selectedForUnBook);
   useEffect(() => {
     if (data) {
@@ -59,7 +59,6 @@ export const Booking = () => {
     setSeatStatus(newSeatStatus);
   };
 
-  
   const handleUnBooking = async () => {
     try {
       const response = await unSelectSeat({
@@ -81,7 +80,7 @@ export const Booking = () => {
           title: "Success",
           text: "Seats updated successfully",
         });
-        refetch()
+        refetch();
       }
     } catch (error) {
       console.error("An error occurred while updating seats:", error);
@@ -94,9 +93,9 @@ export const Booking = () => {
   };
 
   const handleBooking = async () => {
-    if(selectedForUnBook.length > 0){
+    if (selectedForUnBook.length > 0) {
       handleUnBooking();
-      return
+      return;
     }
     try {
       const response = await updateSeatMutation({
@@ -163,9 +162,7 @@ export const Booking = () => {
   return (
     <Container>
       <Button className="w-full my-7" type="button" onClick={handleBooking}>
-        {
-          selectedForUnBook.length > 0 ? "Cancel Booking" : "Book"
-        }
+        {selectedForUnBook.length > 0 ? "Cancel Booking" : "Book"}
       </Button>
       <div className="flex justify-center">
         <div className="grid grid-cols-4 gap-4 pb-5">
@@ -178,17 +175,18 @@ export const Booking = () => {
                 <div
                   key={index}
                   className={`w-10 h-10 rounded p-4 ${
+                    selectedForUnBook.includes(seatName) ? "bg-purple-400" : ""
+                  } ${
                     coachData && coachData.bookedSeats.includes(seatName)
                       ? "bg-red-500"
                       : status === "selected"
                       ? "bg-yellow-500"
                       : "bg-green-500"
-                  } ${
-                    selectedForUnBook.includes(seatName) ? "bg-purple-400" : ""
-                  }
                   } text-center`}
                   onClick={() => handleSeatSelection(seatName)}
-                  onDoubleClick={()=> setSelectedForUnBook((prev)=> [...prev, seatName])}
+                  onDoubleClick={() =>
+                    setSelectedForUnBook((prev) => [...prev, seatName])
+                  }
                 >
                   {seatName}
                 </div>
