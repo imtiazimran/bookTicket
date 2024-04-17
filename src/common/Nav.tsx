@@ -1,12 +1,42 @@
 "use client";
-import {  Navbar } from "keep-react";
+import { Navbar } from "keep-react";
 import { CaretDown } from "phosphor-react";
 import logo from ".././assets/busLogo.png";
 import { Link } from "react-router-dom";
-import { ImageProps } from "../utils/types/types";
+import { ImageProps, RootState } from "../utils/types/types";
+// import { loginUser, logoutUser } from "../redux/authentication/authAction";
+import {  useSelector } from "react-redux";
+import axios from "axios";
+import { base } from "../utils/baseApi";
 
 const NavbarComponent: React.FC = () => {
- 
+  // const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state?.auth?.isAuthenticated
+  );
+  const user = useSelector((state: RootState) => state?.auth?.user);
+  const error = useSelector((state: RootState) => state?.auth?.error);
+
+  const handleLogin = () => {
+    axios
+      .get(base + "/auth/google")
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // dispatch(loginUser());
+  };
+
+  const handleLogout = () => {
+    axios
+      .get(base + "/logout")
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {console.log(error);});
+  };
   const logoProps: ImageProps = {
     src: logo,
     alt: "keep",
@@ -52,7 +82,20 @@ const NavbarComponent: React.FC = () => {
         </Navbar.Collapse>
         <Navbar.Container className="flex gap-1 text-white">
           <Navbar.Toggle className="block" />
-          Menu
+          <p>Menu</p>
+          <div>
+            {isAuthenticated ? (
+              <div>
+                <p>Welcome, {user?.name}</p>
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            ) : (
+              <div>
+                <button onClick={handleLogin}>Login</button>
+              </div>
+            )}
+            {error && <p>{error}</p>}
+          </div>
         </Navbar.Container>
       </Navbar.Container>
     </Navbar>

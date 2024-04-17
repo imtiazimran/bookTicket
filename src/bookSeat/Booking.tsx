@@ -149,10 +149,10 @@ export const Booking = () => {
       }
       // refetch();
     };
-    return () => {
-      // Cleanup WebSocket connection
-      ws.close();
-    };
+    // return () => {
+    //   // Cleanup WebSocket connection
+    //   ws.close();
+    // };
   }, [refetch]);
 
   if (loading || mutationLoading || isLoading || unSelectSeatLoading) {
