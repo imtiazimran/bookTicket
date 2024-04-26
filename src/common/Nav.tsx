@@ -3,40 +3,47 @@ import { Navbar } from "keep-react";
 import { CaretDown } from "phosphor-react";
 import logo from ".././assets/busLogo.png";
 import { Link } from "react-router-dom";
-import { ImageProps, RootState } from "../utils/types/types";
-// import { loginUser, logoutUser } from "../redux/authentication/authAction";
-import {  useSelector } from "react-redux";
-import axios from "axios";
-import { base } from "../utils/baseApi";
+import { ImageProps } from "../utils/types/types";
+// import { useLoginUserQuery, useLogoutUserQuery } from "../redux/api/authApiSlice";
+
 
 const NavbarComponent: React.FC = () => {
-  // const dispatch = useDispatch();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state?.auth?.isAuthenticated
-  );
-  const user = useSelector((state: RootState) => state?.auth?.user);
-  const error = useSelector((state: RootState) => state?.auth?.error);
+  // Call the useLoginUserQuery hook to execute the login request
+  // const {
+  //   data: loginData,
+  //   isLoading: loginLoading,
+  //   refetch: refetchLogin,
+  // } = useLoginUserQuery();
+
+  // // Call the useLogoutUserQuery hook to execute the logout request
+  // const {
+  //   data: logoutData,
+  //   isLoading: logoutLoading,
+  //   refetch: refetchLogout,
+  // } = useLogoutUserQuery();
 
   const handleLogin = () => {
-    axios
-      .get(base + "/auth/google")
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    // dispatch(loginUser());
+    
+
+    // refetchLogin();
+    // axios
+    //   .get(base + "/auth/google", {withCredentials: true})
+    //   .then((res) => {
+    //     console.log(res.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
-  const handleLogout = () => {
-    axios
-      .get(base + "/logout")
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => {console.log(error);});
-  };
+  // const handleLogout = () => {
+  //   // axios
+  //   //   .get(base + "/logout")
+  //   //   .then((res) => {
+  //   //     console.log(res.data);
+  //   //   })
+  //   //   .catch((error) => {console.log(error);});
+  // };
   const logoProps: ImageProps = {
     src: logo,
     alt: "keep",
@@ -84,17 +91,9 @@ const NavbarComponent: React.FC = () => {
           <Navbar.Toggle className="block" />
           <p>Menu</p>
           <div>
-            {isAuthenticated ? (
-              <div>
-                <p>Welcome, {user?.name}</p>
-                <button onClick={handleLogout}>Logout</button>
-              </div>
-            ) : (
-              <div>
-                <button onClick={handleLogin}>Login</button>
-              </div>
-            )}
-            {error && <p>{error}</p>}
+            <div>
+              <button onClick={handleLogin}>Login</button>
+            </div>
           </div>
         </Navbar.Container>
       </Navbar.Container>

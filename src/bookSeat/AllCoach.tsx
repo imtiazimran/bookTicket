@@ -78,7 +78,7 @@ const AllCoach = () => {
               return (
                 <Card
                   key={coach._id}
-                  className={isExpired ? "hidden" : ""}
+                  className={isExpired ? "opacity-50" : ""}
                   onDoubleClick={() => handleDeleteCoach(coach._id)}
                 >
                   <Card.Header className="!p-0">

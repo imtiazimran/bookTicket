@@ -7,7 +7,7 @@ import {
 } from "../redux/api/apiSlice";
 import { useParams } from "react-router-dom";
 import Container from "../utils/Container";
-import { TCoach } from "../utils/types/types";
+import { BookedSeat, TCoach } from "../utils/types/types";
 import Swal from "sweetalert2";
 import Loading from "../utils/Loading";
 
@@ -21,13 +21,13 @@ export const Booking = () => {
   const [coachData, setCoachData] = useState<TCoach | null>(null);
   const { data, isLoading, refetch } = useGetCaochQuery(id);
   const [selectedForUnBook, setSelectedForUnBook] = useState<string[]>([]);
-  console.log("selectedForUnBook", selectedForUnBook);
   useEffect(() => {
     if (data) {
       setCoachData(data.coach);
       setLoading(false);
     }
   }, [data]);
+  console.log(data);
 
   const [updateSeatMutation, { isLoading: mutationLoading }] =
     useUpdateSeatMutation();
@@ -171,28 +171,53 @@ export const Booking = () => {
             (_, index) => {
               const seatName = getSeatName(index);
               const status = seatStatus[index];
+              const bookedSeat = (coachData?.bookedSeats as BookedSeat[] | undefined)?.find((seat) =>
+                seat?.seatNumber?.includes(seatName)
+              );
+              
+              
+              
+              if (!bookedSeat) {
+                return null;
+              }
+              
+
+              // Ensure bookedSeat is properly typed
+              if (typeof bookedSeat === "string") {
+                // Handle the case where bookedSeat is incorrectly typed as string
+                return null;
+              }
+
               return (
                 <div
                   key={index}
-                  className={`w-10 h-10 rounded p-4 ${
+                  className={`w-10 h-10 rounded ${
                     selectedForUnBook.includes(seatName)
                       ? "bg-purple-400"
-                      : coachData && coachData.bookedSeats.includes(seatName)
-                      ? "bg-red-500"
+                      : bookedSeat
+                      ? "bg-red-500" // Booked seat color
                       : status === "selected"
                       ? "bg-yellow-500"
                       : "bg-green-500"
                   }
-                  text-center`}
+        text-center`}
                   onClick={() => handleSeatSelection(seatName)}
                   onDoubleClick={
-                    coachData && coachData.bookedSeats.includes(seatName)
+                    bookedSeat // Allow unbooking only for booked seats
                       ? () =>
                           setSelectedForUnBook((prev) => [...prev, seatName])
                       : () => {}
                   }
                 >
-                  {seatName}
+                  {bookedSeat ? ( // Display user's image if booked
+                    <img
+                      src={bookedSeat.userId.picture} // Assuming the user's image is stored in the 'picture' field
+                      alt={bookedSeat.userId.name} // Assuming the user's name is stored in the 'name' field
+                      className="w-full h-full rounded"
+                    />
+                  ) : (
+                    seatName
+                  )}
                 </div>
               );
             }

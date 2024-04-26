@@ -38,3 +38,23 @@ export interface RootState {
         error: string | null;
     };
 }
+
+export type Tuser = {
+    name: string,
+    picture: string,
+    email: string,
+    role: string
+    isDeleted: boolean
+}
+
+export interface BookedSeat {
+    userId: {
+      name: string;
+      picture: string;
+    };
+    seatNumber: string[];
+    seat: string;
+    
+    // Add other properties if necessary
+  }
+  
