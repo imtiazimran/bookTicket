@@ -177,9 +177,7 @@ export const Booking = () => {
               
               
               
-              if (!bookedSeat) {
-                return null;
-              }
+            
               
 
               // Ensure bookedSeat is properly typed
