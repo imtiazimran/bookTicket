@@ -1,22 +1,43 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { TCoach } from "../../utils/types/types";
 import { base } from "../../utils/baseApi";
 
-export const baseUrl = base+'/api/v1/coach';
+// Function to get the token from local storage
+const getToken = (): string | null => {
+  return localStorage.getItem("token");
+};
 
+export const baseUrl = base + "/api/v1/coach";
 
 export const apiSlice = createApi({
   reducerPath: "ticketsApi",
-  baseQuery: fetchBaseQuery({ baseUrl }),
+  // Configure the baseQuery to include the token in the headers
+  baseQuery: fetchBaseQuery({
+    baseUrl,
+    // headers: {
+    //   authorization: `Bearer ${getToken()}`,
+    // },
+    // Add headers with the authorization token from local storage
+    prepareHeaders: (headers) => {
+      const token = getToken();
+      if (token) {
+        console.log("Token:", token);
+        headers.set("authorization", `Bearer ${token}`);
+      }
+      console.log("Headers:", headers);
+      return headers;
+    },
+  }),
   tagTypes: ["Tickets"], // Define a tag for queries dependent on coach data
   endpoints: (builder) => ({
     fetchData: builder.query<TCoach, void>({
-      query: () => "/",
+      query: () => `/?token=${getToken()}`,
       providesTags: ["Tickets"],
     }),
     getCaoch: builder.query({
       query: (id) => ({
-        url: `/${id}`,
+        url: `/${id}?token=${getToken()}`,
         method: "GET",
       }),
       providesTags: ["Tickets"],
@@ -32,7 +53,7 @@ export const apiSlice = createApi({
     }),
     updateSeat: builder.mutation<TCoach, Partial<TCoach>>({
       query: (data) => ({
-        url: `/book/${data.id}`,
+        url: `/book/${data.id}?token=${getToken()}`,
         method: "PATCH",
         body: data,
       }),
@@ -52,7 +73,7 @@ export const apiSlice = createApi({
         method: "DELETE",
       }),
       invalidatesTags: ["Tickets"],
-    })
+    }),
   }),
 });
 
@@ -62,5 +83,5 @@ export const {
   usePostDataMutation,
   useUpdateSeatMutation,
   useDeleteCoachMutation,
-  useUnSelectSeatMutation
+  useUnSelectSeatMutation,
 } = apiSlice;

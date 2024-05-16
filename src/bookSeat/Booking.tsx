@@ -21,13 +21,16 @@ export const Booking = () => {
   const [coachData, setCoachData] = useState<TCoach | null>(null);
   const { data, isLoading, refetch } = useGetCaochQuery(id);
   const [selectedForUnBook, setSelectedForUnBook] = useState<string[]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+
   useEffect(() => {
     if (data) {
       setCoachData(data.coach);
       setLoading(false);
     }
   }, [data]);
-  console.log(data);
+
+  console.log(selectedForUnBook);
 
   const [updateSeatMutation, { isLoading: mutationLoading }] =
     useUpdateSeatMutation();
@@ -40,7 +43,6 @@ export const Booking = () => {
   const [seatStatus, setSeatStatus] = useState<string[]>(
     initializeSeatStatus(coachData ? coachData.seats * 4 : 0)
   );
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
   const handleSeatSelection = (seatName: string) => {
     const seatIndex = selectedSeats.indexOf(seatName);
@@ -138,22 +140,22 @@ export const Booking = () => {
     return row * 4 + col;
   };
 
-  useEffect(() => {
-    const ws = new WebSocket("wss://bookticketbackend.onrender.com:3000");
-    ws.onmessage = (event) => {
-      // Handle WebSocket message
-      const message = event.data;
-      console.log("Received message from WebSocket:", message);
-      if (message === "success") {
-        refetch();
-      }
-      // refetch();
-    };
-    // return () => {
-    //   // Cleanup WebSocket connection
-    //   ws.close();
-    // };
-  }, [refetch]);
+  // useEffect(() => {
+  //   // const ws = new WebSocket("wss://bookticketbackend.onrender.com:3000");
+  //   // ws.onmessage = (event) => {
+  //   //   // Handle WebSocket message
+  //   //   const message = event.data;
+  //   //   console.log("Received message from WebSocket:", message);
+  //   //   if (message === "success") {
+  //   //     refetch();
+  //   //   }
+  //   //   // refetch();
+  //   // };
+  //   // return () => {
+  //   //   // Cleanup WebSocket connection
+  //   //   ws.close();
+  //   // };
+  // }, [refetch]);
 
   if (loading || mutationLoading || isLoading || unSelectSeatLoading) {
     return <Loading />;
@@ -164,6 +166,10 @@ export const Booking = () => {
       <Button className="w-full my-7" type="button" onClick={handleBooking}>
         {selectedForUnBook.length > 0 ? "Cancel Booking" : "Book"}
       </Button>
+      <div className="flex flex-wrap justify-center items-center gap-2">
+        {selectedForUnBook.length > 0 &&
+          selectedForUnBook.map((seat) => <p>{seat}</p>)}
+      </div>
       <div className="flex justify-center">
         <div className="grid grid-cols-4 gap-4 pb-5">
           {Array.from(
@@ -171,14 +177,9 @@ export const Booking = () => {
             (_, index) => {
               const seatName = getSeatName(index);
               const status = seatStatus[index];
-              const bookedSeat = (coachData?.bookedSeats as BookedSeat[] | undefined)?.find((seat) =>
-                seat?.seatNumber?.includes(seatName)
-              );
-              
-              
-              
-            
-              
+              const bookedSeat = (
+                coachData?.bookedSeats as BookedSeat[] | undefined
+              )?.find((seat) => seat?.seatNumber?.includes(seatName));
 
               // Ensure bookedSeat is properly typed
               if (typeof bookedSeat === "string") {

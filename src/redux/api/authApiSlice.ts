@@ -12,6 +12,7 @@ export const authenticationApi = createApi({
     reducerPath: 'authenticationApi',
     baseQuery: fetchBaseQuery({
         baseUrl: base,
+        credentials: 'include',
         prepareHeaders: (headers) => {
             // Add credentials: 'include' to the headers
             headers.set('credentials', 'include');
@@ -20,7 +21,7 @@ export const authenticationApi = createApi({
     }),
     endpoints: (builder) => ({
         LoginUser: builder.query<LoginResponse, void>({
-            query: () => '/auth/google',
+            query: () => '/auth/google', 
         }),
         LogoutUser: builder.query({
             query: () => '/logout',

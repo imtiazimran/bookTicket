@@ -9,10 +9,8 @@ import store from "./redux/store.ts";
 import AllCoach from "./bookSeat/AllCoach.tsx";
 import Layout from "./bookSeat/layout/Layout.tsx";
 import { AddCoach } from "./bookSeat/AddCoach.tsx";
-import axios from "axios";
 import { EmptyComponent } from "./utils/Empty.tsx";
-import { baseUrl } from "./redux/api/apiSlice.ts";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,14 +31,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/booking/:id",
-        element: <Booking />,
-        loader: ({ params }) => {
-          return axios
-            .get(`${baseUrl}/${params.id}`) // Fix the syntax error here
-            .then((res) => {
-              return res.data;
-            });
-        },
+        element: <Booking />
       },
       {
         path: "/addCoach",
@@ -49,10 +40,14 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <GoogleOAuthProvider clientId={clientId} >
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );

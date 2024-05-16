@@ -4,8 +4,14 @@ import { CaretDown } from "phosphor-react";
 import logo from ".././assets/busLogo.png";
 import { Link } from "react-router-dom";
 import { ImageProps } from "../utils/types/types";
-// import { useLoginUserQuery, useLogoutUserQuery } from "../redux/api/authApiSlice";
-
+// import {
+//   authenticationApi,
+//   useLoginUserQuery,
+//   useLogoutUserQuery,
+// } from "../redux/api/authApiSlice";
+// import axios from "axios";
+// import { base } from "../utils/baseApi";
+import AuthBtn from "../googleAuth/AuthBtn";
 
 const NavbarComponent: React.FC = () => {
   // Call the useLoginUserQuery hook to execute the login request
@@ -15,27 +21,26 @@ const NavbarComponent: React.FC = () => {
   //   refetch: refetchLogin,
   // } = useLoginUserQuery();
 
-  // // Call the useLogoutUserQuery hook to execute the logout request
+  // // // Call the useLogoutUserQuery hook to execute the logout request
   // const {
   //   data: logoutData,
   //   isLoading: logoutLoading,
   //   refetch: refetchLogout,
   // } = useLogoutUserQuery();
 
-  const handleLogin = () => {
-    
-
-    // refetchLogin();
-    // axios
-    //   .get(base + "/auth/google", {withCredentials: true})
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-  };
-
+  // const handleLogin = async () => {
+  //   refetchLogin();
+  // };
+//   const handleLogin = async () => {
+//     try {
+//         // Open the Google OAuth login page in a new window
+//         window.open(`${base}/auth/google`, '_blank');
+//         // Handle successful login
+//     } catch (error) {
+//         console.error('Login error:', error);
+//         // Handle login error
+//     }
+// };
   // const handleLogout = () => {
   //   // axios
   //   //   .get(base + "/logout")
@@ -92,7 +97,9 @@ const NavbarComponent: React.FC = () => {
           <p>Menu</p>
           <div>
             <div>
-              <button onClick={handleLogin}>Login</button>
+              <AuthBtn/>
+              {/* <button onClick={handleLogin}>Login</button> */}
+              {/* <a href="http://localhost:3000/auth/google">Login</a> */}
             </div>
           </div>
         </Navbar.Container>
