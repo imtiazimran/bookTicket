@@ -3,52 +3,37 @@ import { Navbar } from "keep-react";
 import { CaretDown } from "phosphor-react";
 import logo from ".././assets/busLogo.png";
 import { Link } from "react-router-dom";
-import { ImageProps } from "../utils/types/types";
-// import {
-//   authenticationApi,
-//   useLoginUserQuery,
-//   useLogoutUserQuery,
-// } from "../redux/api/authApiSlice";
-// import axios from "axios";
-// import { base } from "../utils/baseApi";
+import { ImageProps, Tuser } from "../utils/types/types";
+
 import AuthBtn from "../googleAuth/AuthBtn";
+import { useGetUserQuery } from "../redux/api/userSlice";
+import { useEffect, useState } from "react";
+import { getToken } from "../utils/getToken";
 
 const NavbarComponent: React.FC = () => {
-  // Call the useLoginUserQuery hook to execute the login request
-  // const {
-  //   data: loginData,
-  //   isLoading: loginLoading,
-  //   refetch: refetchLogin,
-  // } = useLoginUserQuery();
+  const [user, setUser] = useState<Tuser>({} as Tuser);
+  const [showLogout, setShowLogout] = useState(false); // State to toggle logout button
+  const { data } = useGetUserQuery({});
+  const token = getToken();
+  // console.log(token);
+  useEffect(() => {
+    if (data) {
+      setUser(data.userData);
+    }
+  }, [data]);
 
-  // // // Call the useLogoutUserQuery hook to execute the logout request
-  // const {
-  //   data: logoutData,
-  //   isLoading: logoutLoading,
-  //   refetch: refetchLogout,
-  // } = useLogoutUserQuery();
 
-  // const handleLogin = async () => {
-  //   refetchLogin();
-  // };
-//   const handleLogin = async () => {
-//     try {
-//         // Open the Google OAuth login page in a new window
-//         window.open(`${base}/auth/google`, '_blank');
-//         // Handle successful login
-//     } catch (error) {
-//         console.error('Login error:', error);
-//         // Handle login error
-//     }
-// };
-  // const handleLogout = () => {
-  //   // axios
-  //   //   .get(base + "/logout")
-  //   //   .then((res) => {
-  //   //     console.log(res.data);
-  //   //   })
-  //   //   .catch((error) => {console.log(error);});
-  // };
+  const handleImageClick = () => {
+    setShowLogout((prev) => !prev); // Toggle the logout button visibility
+  };
+
+  const handleLogout = () => {
+    setShowLogout(false);
+    localStorage.removeItem("token");
+    window.location.reload();
+    console.log("Logging out...");
+  };
+
   const logoProps: ImageProps = {
     src: logo,
     alt: "keep",
@@ -92,15 +77,30 @@ const NavbarComponent: React.FC = () => {
             <Navbar.Link linkName="Resources" className="!py-0" />
           </Navbar.Container>
         </Navbar.Collapse>
-        <Navbar.Container className="flex gap-1 text-white">
+        <Navbar.Container className="flex gap-1 text-white justify-center items-center">
           <Navbar.Toggle className="block" />
           <p>Menu</p>
           <div>
-            <div>
-              <AuthBtn/>
-              {/* <button onClick={handleLogin}>Login</button> */}
-              {/* <a href="http://localhost:3000/auth/google">Login</a> */}
-            </div>
+            {token && user ? (
+              <div className="relative">
+                <div className="rounded-full w-10 h-10 cursor-pointer" onClick={handleImageClick}>
+                  <img className="rounded-full" src={user?.picture} alt={user?.name} />
+                </div>
+                {showLogout && (
+                  <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg">
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <AuthBtn />
+            )}
           </div>
         </Navbar.Container>
       </Navbar.Container>

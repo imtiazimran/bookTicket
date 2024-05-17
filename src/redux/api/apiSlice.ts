@@ -2,11 +2,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { TCoach } from "../../utils/types/types";
 import { base } from "../../utils/baseApi";
+import { getToken } from "../../utils/getToken";
 
 // Function to get the token from local storage
-const getToken = (): string | null => {
-  return localStorage.getItem("token");
-};
+
 
 export const baseUrl = base + "/api/v1/coach";
 
@@ -15,17 +14,12 @@ export const apiSlice = createApi({
   // Configure the baseQuery to include the token in the headers
   baseQuery: fetchBaseQuery({
     baseUrl,
-    // headers: {
-    //   authorization: `Bearer ${getToken()}`,
-    // },
-    // Add headers with the authorization token from local storage
     prepareHeaders: (headers) => {
       const token = getToken();
       if (token) {
         // console.log("Token:", token);
         headers.set("authorization", `Bearer ${token}`);
       }
-      console.log("Headers:", headers);
       return headers;
     },
   }),

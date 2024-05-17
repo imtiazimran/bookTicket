@@ -30,7 +30,6 @@ export const Booking = () => {
     }
   }, [data]);
 
-  console.log(selectedForUnBook);
 
   const [updateSeatMutation, { isLoading: mutationLoading }] =
     useUpdateSeatMutation();
