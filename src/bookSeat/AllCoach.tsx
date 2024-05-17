@@ -61,7 +61,7 @@ const AllCoach = () => {
   }, [data, coaches]);
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

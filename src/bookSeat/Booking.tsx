@@ -19,7 +19,8 @@ export const Booking = () => {
   const { id } = useParams<Params>();
   const [loading, setLoading] = useState(true);
   const [coachData, setCoachData] = useState<TCoach | null>(null);
-  const { data, isLoading, refetch } = useGetCaochQuery(id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, isLoading, refetch }: any = useGetCaochQuery(id);
   const [selectedForUnBook, setSelectedForUnBook] = useState<string[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
