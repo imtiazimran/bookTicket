@@ -22,7 +22,7 @@ export const apiSlice = createApi({
     prepareHeaders: (headers) => {
       const token = getToken();
       if (token) {
-        console.log("Token:", token);
+        // console.log("Token:", token);
         headers.set("authorization", `Bearer ${token}`);
       }
       console.log("Headers:", headers);
