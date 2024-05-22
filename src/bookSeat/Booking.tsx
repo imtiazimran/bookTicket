@@ -20,7 +20,7 @@ export const Booking = () => {
   const [loading, setLoading] = useState(true);
   const [coachData, setCoachData] = useState<TCoach | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, isLoading, refetch }: any = useGetCaochQuery(id);
+  const { data, isLoading, refetch }: any = useGetCaochQuery(id, {pollingInterval: 1000, refetchOnReconnect: true, refetchOnFocus: true, refetchOnMountOrArgChange: true});
   const [selectedForUnBook, setSelectedForUnBook] = useState<string[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
