@@ -10,17 +10,24 @@ import Container from "../utils/Container";
 import { BookedSeat, TCoach } from "../utils/types/types";
 import Swal from "sweetalert2";
 import Loading from "../utils/Loading";
+import { useGetUserQuery } from "../redux/api/userSlice";
 
 interface Params extends Record<string, string | undefined> {
   id: string;
 }
 
 export const Booking = () => {
+  const { data: user } = useGetUserQuery({});
   const { id } = useParams<Params>();
   const [loading, setLoading] = useState(true);
   const [coachData, setCoachData] = useState<TCoach | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, isLoading, refetch }: any = useGetCaochQuery(id, {pollingInterval: 1000, refetchOnReconnect: true, refetchOnFocus: true, refetchOnMountOrArgChange: true});
+  const { data, isLoading, refetch }: any = useGetCaochQuery(id, {
+    pollingInterval: 1000,
+    refetchOnReconnect: true,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
   const [selectedForUnBook, setSelectedForUnBook] = useState<string[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
@@ -31,6 +38,20 @@ export const Booking = () => {
     }
   }, [data]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleUnBookingSelection = (seatName : string, bookedBy: any ) => {
+    const loggedUserEmail = user?.userData?.email;
+
+    if(loggedUserEmail !== bookedBy.email){
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `You can't unbook someone else's seat, the seat is booked by ${bookedBy.name || bookedBy.email}`,
+      });
+      return
+    }
+    setSelectedForUnBook((prev) => [...prev, seatName]);
+  };
 
   const [updateSeatMutation, { isLoading: mutationLoading }] =
     useUpdateSeatMutation();
@@ -166,10 +187,10 @@ export const Booking = () => {
       <Button className="w-full my-7" type="button" onClick={handleBooking}>
         {selectedForUnBook.length > 0 ? "Cancel Booking" : "Book"}
       </Button>
-      <div className="flex flex-wrap justify-center items-center gap-2">
+      {/* <div className="flex flex-wrap justify-center items-center gap-2">
         {selectedForUnBook.length > 0 &&
           selectedForUnBook.map((seat) => <p>{seat}</p>)}
-      </div>
+      </div> */}
       <div className="flex justify-center">
         <div className="grid grid-cols-4 gap-4 pb-5">
           {Array.from(
@@ -204,16 +225,19 @@ export const Booking = () => {
                   onDoubleClick={
                     bookedSeat // Allow unbooking only for booked seats
                       ? () =>
-                          setSelectedForUnBook((prev) => [...prev, seatName])
+                        handleUnBookingSelection(seatName, bookedSeat?.userId)
                       : () => {}
                   }
                 >
                   {bookedSeat ? ( // Display user's image if booked
+                  <div className="relative">
                     <img
                       src={bookedSeat.userId.picture} // Assuming the user's image is stored in the 'picture' field
                       alt={bookedSeat.userId.name} // Assuming the user's name is stored in the 'name' field
-                      className="w-full h-full rounded"
-                    />
+                      className="w-full h-full rounded object-cover"
+                      />
+                      <span className={`absolute top-0 left-0 bottom-0 right-0 ${selectedForUnBook.includes(seatName) ? "bg-red-500" : " bg-black bg-opacity-25"} p-2  text-white text-center rounded-l-sm  shadow-sm`}>{seatName}</span>
+                      </div>
                   ) : (
                     seatName
                   )}
