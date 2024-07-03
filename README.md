@@ -1,30 +1,27 @@
-# React + TypeScript + Vite
+# BookTicket Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Technologies Used
 
-Currently, two official plugins are available:
+- **React**: JavaScript library for building user interfaces
+- **React Router DOM**: Declarative routing for React applications
+- **Redux Toolkit**: State management library for React applications
+- **React Hook Form**: Performant, flexible and extensible forms with easy-to-use validation
+- **axios**: Promise-based HTTP client for the browser and Node.js
+- **Moment.js**: Parse, validate, manipulate, and display dates and times
+- **SweetAlert2**: Beautiful, responsive, customizable, accessible replacement for JavaScript's popup boxes
+- **TailwindCSS**: Rapidly build modern websites without ever leaving your HTML
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Responsive UI**: Built with TailwindCSS for a mobile-first approach.
+- **Google OAuth Integration**: Seamless login with Google OAuth for authentication.
+- **Date Picker**: Enhanced user experience with React Datepicker for selecting travel dates.
+- **Form Handling**: Efficient form handling with React Hook Form for user input.
+- **State Management**: Simplified state management with Redux Toolkit.
+- **HTTP Requests**: Manage API calls with axios for seamless data fetching and posting.
+- **Real-time Updates**: Display real-time updates using WebSocket for dynamic content.
+- **Custom Icons**: Utilize Phosphor Icons for a visually appealing interface.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Project Structure
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+The frontend project follows a typical structure for a React application
